@@ -1,25 +1,21 @@
-import logo from './logo.svg';
-import './App.css';
+import { useEffect, useState } from "react"
+import { getCategories } from "./connect";
+import { useNavigate } from "react-router-dom";
+import Loading from "./Loading";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+export default function App() {
+    const [categories, setCategories] = useState();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        getCategories(setCategories);
+    }, [])
+
+    return <main id="home">
+        {
+            categories ? categories.map(({ name, id }) => {
+                return <button onClick={() => navigate(`/${id}/news?page=0`)} key={id}>{name}</button>
+            }) : <Loading/>
+        }
+    </main>
 }
-
-export default App;
